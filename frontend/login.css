@@ -1,0 +1,214 @@
+/* ── CSS Variables ── */
+:root {
+    --bg:      #0d0f14;
+    --bg2:     #13161e;
+    --card:    #181c26;
+    --border:  #252a38;
+    --accent:  #4f8ef7;
+    --accent2: #7c5cfc;
+    --text:    #e8ecf4;
+    --muted:   #6b7494;
+    --danger:  #f75c5c;
+    --radius:  12px;
+    --transition: 0.2s ease;
+}
+
+[data-theme="light"] {
+    --bg:     #f0f2f8;
+    --bg2:    #e6e9f4;
+    --card:   #ffffff;
+    --border: #d4d8e8;
+    --text:   #1a1f2e;
+    --muted:  #7a82a0;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition), color var(--transition);
+}
+
+/* ── Theme toggle ── */
+.theme-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background var(--transition), border var(--transition);
+    z-index: 100;
+}
+
+.theme-btn:hover {
+    background: var(--border);
+}
+
+/* ── Container ── */
+.login-container {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* ── Card ── */
+.login-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    transition: background var(--transition), border var(--transition);
+}
+
+/* ── Brand ── */
+.brand {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: -0.5px;
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.brand span {
+    color: var(--accent);
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin-bottom: 32px;
+}
+
+/* ── Form labels ── */
+.form-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+/* ── Inputs ── */
+.form-control {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    padding: 11px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    transition: border var(--transition), background var(--transition);
+}
+
+.form-control:focus {
+    background: var(--bg2);
+    border-color: var(--accent);
+    color: var(--text);
+    box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.15);
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: var(--muted);
+}
+
+/* ── Submit button ── */
+.btn-theme {
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 12px;
+    border-radius: 10px;
+    width: 100%;
+    cursor: pointer;
+    transition: opacity var(--transition), transform var(--transition);
+    letter-spacing: 0.02em;
+}
+
+.btn-theme:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+    color: #fff;
+}
+
+.btn-theme:active {
+    transform: translateY(0);
+}
+
+/* ── Divider ── */
+.divider {
+    height: 1px;
+    background: var(--border);
+    margin: 28px 0;
+}
+
+/* ── Register link ── */
+.register-link {
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--muted);
+}
+
+.register-link a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+/* ── Error alert ── */
+.alert-hub {
+    background: rgba(247, 92, 92, 0.1);
+    border: 1px solid rgba(247, 92, 92, 0.3);
+    color: #f75c5c;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    display: none;
+}
+
+.alert-hub.show {
+    display: block;
+}
+.auth-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 10px;
+    opacity: 0.85;
+}

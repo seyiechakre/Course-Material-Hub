@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>CourseHub Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="myprofile.css">
+</head>
+<body>
+
+<div class="dashboard-wrap">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div>
+            <button class="theme-btn" id="themeToggle">
+                <span id="themeIcon">☀️</span>
+                <span id="themeLabel">Light Mode</span>
+            </button>
+            <img src="logo.png" alt="Don Bosco University" class="sidebar-logo-img">
+            <div class="sidebar-logo">Course<span>Hub</span></div>
+            <div class="sidebar-divider"></div>
+
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" onclick="showSection('profile', this)">
+                        <span class="icon">👤</span> Profile
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('myfiles', this)">
+                        <span class="icon">📁</span> My Files
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('search', this)">
+                        <span class="icon">🔍</span> Search
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('upload', this)">
+                        <span class="icon">⬆️</span> Upload
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div>
+            <a class="logout-link" href="/logout">
+                <span class="icon">🚪</span> Logout
+            </a>
+        </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- Mobile menu -->
+        <button class="mobile-menu-btn" onclick="openSidebar()">☰ Menu</button>
+
+        <!-- PROFILE -->
+        <div id="profile" class="section active-section">
+            <p class="page-title">Welcome back 👋</p>
+            <p class="page-subtitle">Here's a snapshot of your account.</p>
+
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <div class="hub-card h-100">
+                        <div class="profile-avatar" id="avatarInitial">?</div>
+                        <div class="profile-field">
+                            <label>Username</label>
+                            <span id="username"><span class="spinner"></span></span>
+                        </div>
+                        <div class="profile-field">
+                            <label>Email</label>
+                            <span id="email"><span class="spinner"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="stat-pill">
+                        <div class="num" id="statDownloads">—</div>
+                        <div class="lbl">Total Downloads</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MY FILES -->
+        <div id="myfiles" class="section">
+            <p class="page-title">My Files</p>
+            <p class="page-subtitle">Files you've previously downloaded.</p>
+            <div id="myFilesList">
+                <div class="empty-state">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEARCH -->
+        <div id="search" class="section">
+            <p class="page-title">Search Files</p>
+            <p class="page-subtitle">Find lecture files by title or subject.</p>
+
+            <div class="search-wrap">
+                <div class="search-type-toggle">
+                    <button class="type-btn active" id="btnByTitle" onclick="setSearchType('title', this)">By Title</button>
+                    <button class="type-btn" id="btnBySubject" onclick="setSearchType('subject', this)">By Subject</button>
+                </div>
+                <input type="text" id="searchInput" class="hub-input" placeholder="Search by title...">
+                <button class="btn-primary-hub" onclick="doSearch()">Search</button>
+            </div>
+
+            <div id="searchResults"></div>
+        </div>
+
+        <!-- UPLOAD -->
+        <div id="upload" class="section">
+            <p class="page-title">Upload Lecture</p>
+            <p class="page-subtitle">Share lecture files with your course.</p>
+
+            <div class="hub-card">
+                <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+                    <div class="upload-grid">
+                        <input type="text" name="title" class="hub-input" placeholder="Lecture Title" required>
+                        <input type="text" name="subject" class="hub-input" placeholder="Subject" required>
+                    </div>
+
+                    <div class="file-drop" id="fileDrop">
+                        <input type="file" name="file" id="fileInput" required onchange="updateFileName(this)">
+                        <div class="drop-icon">📄</div>
+                        <div>Drag & drop or <strong>browse</strong></div>
+                        <div class="drop-name" id="dropFileName">No file chosen</div>
+                    </div>
+
+                    <div style="margin-top: 16px;">
+                        <button type="submit" class="btn-primary-hub" id="uploadBtn">Upload File</button>
+                    </div>
+                </form>
+                <div id="uploadMessage"></div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- Toast -->
+<div class="toast-hub" id="toast"></div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* ── Theme Toggle ── */
+const html = document.documentElement;
+const themeBtn = document.getElementById("themeToggle");
+const themeIcon = document.getElementById("themeIcon");
+const themeLabel = document.getElementById("themeLabel");
+
+function applyTheme(theme) {
+    html.setAttribute("data-theme", theme);
+    if (theme === "light") {
+        themeIcon.textContent = "🌙";
+        themeLabel.textContent = "Dark Mode";
+    } else {
+        themeIcon.textContent = "☀️";
+        themeLabel.textContent = "Light Mode";
+    }
+    localStorage.setItem("ch-theme", theme);
+}
+
+themeBtn.addEventListener("click", () => {
+    const curr = html.getAttribute("data-theme");
+    applyTheme(curr === "dark" ? "light" : "dark");
+});
+
+const saved = localStorage.getItem("ch-theme") || "dark";
+applyTheme(saved);
+
+/* ── Section Navigation ── */
+function showSection(id, el) {
+    document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+    el.classList.add("active");
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active-section"));
+    document.getElementById(id).classList.add("active-section");
+    if (id === "myfiles") loadMyFiles();
+    closeSidebar();
+}
+
+/* ── Mobile Sidebar ── */
+function openSidebar() {
+    document.getElementById("sidebar").classList.add("open");
+    document.getElementById("sidebarOverlay").classList.add("show");
+}
+
+function closeSidebar() {
+    document.getElementById("sidebar").classList.remove("open");
+    document.getElementById("sidebarOverlay").classList.remove("show");
+}
+
+/* ── Toast ── */
+function showToast(msg, isError = false) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.className = "toast-hub" + (isError ? " error" : "");
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 3500);
+}
+
+/* ── File Icon by extension ── */
+function fileIcon(name) {
+    const ext = name.split(".").pop().toLowerCase();
+    const map = {
+        pdf: "📕", doc: "📘", docx: "📘",
+        ppt: "📙", pptx: "📙", xls: "📗",
+        xlsx: "📗", mp4: "🎬", mp3: "🎵",
+        zip: "🗜️", jpg: "🖼️", jpeg: "🖼️", png: "🖼️"
+    };
+    return map[ext] || "📄";
+}
+
+/* ── Render file list ── */
+function renderFiles(files, containerId, emptyMsg = "No files found.") {
+    const container = document.getElementById(containerId);
+    if (!files || files.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                <p>${emptyMsg}</p>
+            </div>`;
+        return;
+    }
+    container.innerHTML = files.map(file => {
+        const filename = file.filename || file;
+        const title    = file.title    || filename;
+        const subject  = file.subject  || null;
+        return `
+        <div class="file-item">
+            <div class="file-item-name">
+                <div class="file-icon">${fileIcon(filename)}</div>
+                <div>
+                    <div class="file-name-text" title="${title}">${title}</div>
+                    ${subject ? `<span class="subject-tag">${subject}</span>` : ""}
+                </div>
+            </div>
+            <a class="btn-download" href="/download/${encodeURIComponent(filename)}" download>Download</a>
+        </div>`;
+    }).join("");
+}
+
+/* ── Load Profile ── */
+async function loadProfile() {
+    try {
+        const res = await fetch("/user");
+        if (!res.ok) throw new Error("Not logged in");
+        const user = await res.json();
+        document.getElementById("username").textContent = user.username;
+        document.getElementById("email").textContent = user.email;
+        const initials = user.username.slice(0, 2).toUpperCase();
+        document.getElementById("avatarInitial").textContent = initials;
+    } catch(err) {
+        document.getElementById("username").textContent = "Error loading";
+        document.getElementById("email").textContent = "Error loading";
+    }
+}
+
+/* ── Load My Files ── */
+async function loadMyFiles() {
+    document.getElementById("myFilesList").innerHTML =
+        `<div class="empty-state"><div class="spinner"></div></div>`;
+    try {
+        const res = await fetch("/my-files");
+        if (!res.ok) throw new Error();
+        const files = await res.json();
+        document.getElementById("statDownloads").textContent = files.length;
+        renderFiles(files, "myFilesList", "You haven't downloaded any files yet.");
+    } catch(err) {
+        document.getElementById("myFilesList").innerHTML =
+            `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Could not load files.</p></div>`;
+    }
+}
+
+/* ── Search type toggle ── */
+let searchType = "title";
+
+function setSearchType(type, el) {
+    searchType = type;
+    document.querySelectorAll(".type-btn").forEach(b => b.classList.remove("active"));
+    el.classList.add("active");
+    document.getElementById("searchInput").placeholder =
+        type === "title" ? "Search by title..." : "Search by subject...";
+    document.getElementById("searchResults").innerHTML = "";
+}
+
+/* ── Search ── */
+async function doSearch() {
+    const query = document.getElementById("searchInput").value.trim();
+    if (!query) return;
+    const container = document.getElementById("searchResults");
+    container.innerHTML = `<div class="empty-state"><div class="spinner"></div></div>`;
+    try {
+        const res = await fetch(`/search-files?q=${encodeURIComponent(query)}&type=${searchType}`);
+        if (!res.ok) throw new Error();
+        const files = await res.json();
+        renderFiles(files, "searchResults", `No files matched "${query}".`);
+    } catch(err) {
+        container.innerHTML = `<div class="hub-alert error">Search failed. Please try again.</div>`;
+    }
+}
+
+document.getElementById("searchInput").addEventListener("keydown", e => {
+    if (e.key === "Enter") doSearch();
+});
+
+/* ── Upload ── */
+document.getElementById("uploadForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const btn   = document.getElementById("uploadBtn");
+    const msgEl = document.getElementById("uploadMessage");
+    btn.textContent = "Uploading...";
+    btn.disabled = true;
+    msgEl.innerHTML = "";
+    try {
+        const formData = new FormData(e.target);
+        const res  = await fetch("/upload", { method: "POST", body: formData });
+        const text = await res.text();
+        if (res.ok) {
+            msgEl.innerHTML = `<div class="hub-alert success">✅ ${text}</div>`;
+            e.target.reset();
+            document.getElementById("dropFileName").textContent = "No file chosen";
+            showToast("File uploaded successfully!");
+        } else {
+            msgEl.innerHTML = `<div class="hub-alert error">⚠️ ${text}</div>`;
+        }
+    } catch(err) {
+        msgEl.innerHTML = `<div class="hub-alert error">Upload failed. Check your connection.</div>`;
+    } finally {
+        btn.textContent = "Upload File";
+        btn.disabled = false;
+    }
+});
+
+/* ── File Drop UX ── */
+function updateFileName(input) {
+    const name = input.files[0]?.name || "No file chosen";
+    document.getElementById("dropFileName").textContent = name;
+}
+
+const drop = document.getElementById("fileDrop");
+drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("dragover"); });
+drop.addEventListener("dragleave", () => drop.classList.remove("dragover"));
+drop.addEventListener("drop", () => drop.classList.remove("dragover"));
+
+/* ── Init ── */
+loadProfile();
+</script>
+
+</body>
+</html>
