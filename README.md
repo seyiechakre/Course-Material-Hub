@@ -108,4 +108,4 @@ Demo video will be added soon.
 ---
 
 ## 👨‍💻 Author
-Developed as part of coursework submission.
+Seyievilie Chakre
