@@ -1,13 +1,13 @@
-# 📚 Course Material Hub
+#  Course Material Hub
 
-## 📖 Description
+##  Description
 Course Material Hub is a full-stack web application developed to help students upload, manage, and download course-related materials efficiently.
 
 The system provides user authentication, file uploads, and search functionality, allowing students to easily access academic resources in one place.
 
 ---
 
-## ⚙️ Tech Stack
+##  Tech Stack
 - Backend: Node.js, Express.js  
 - Database: MongoDB (Mongoose)  
 - Authentication: bcrypt, express-session  
@@ -16,7 +16,7 @@ The system provides user authentication, file uploads, and search functionality,
 
 ---
 
-## ⚙️ Prerequisites
+##  Prerequisites
 Make sure you have the following installed:
 
 - Node.js (v18 or higher)
@@ -25,7 +25,7 @@ Make sure you have the following installed:
 
 ---
 
-## 🚀 Installation Steps
+##  Installation Steps
 
 1. Clone the repository:
 git clone https://github.com/seyiechakre/Course-Material-Hub.git
@@ -48,7 +48,7 @@ http://localhost:3000
 
 ---
 
-## ✨ Features
+##  Features
 - User Registration and Login  
 - Secure authentication using bcrypt  
 - Session management  
@@ -58,40 +58,12 @@ http://localhost:3000
 - Dashboard with user details  
 
 ---
-
-## 📁 Project Structure
-
-Course-Material-Hub/
-│
-├── backend/
-│   ├── app.js
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── upload/
-│   ├── usermodel.js
-│   ├── filemodel.js
-│   ├── downloadmodel.js
-│
-├── frontend/
-│   ├── login.html
-│   ├── register.html
-│   ├── myprofile.html
-│   ├── login.css
-│   ├── register.css
-│   ├── myprofile.css
-│   ├── theme.js
-│   ├── logo.png
-│
-└── README.md
-
----
-
-## 🎥 Demo Video
+##  Demo Video
 Demo video will be added soon.
 
 ---
 
-## 🔒 Notes
+##  Notes
 - node_modules is excluded using .gitignore  
 - Uploaded files are stored in the upload folder  
 - MongoDB must be running locally  
@@ -99,7 +71,7 @@ Demo video will be added soon.
 
 ---
 
-## 🧠 Future Improvements
+##  Future Improvements
 - Cloud storage integration  
 - Better UI/UX  
 - File categorization  
@@ -107,5 +79,5 @@ Demo video will be added soon.
 
 ---
 
-## 👨‍💻 Author
+##  Author
 Seyievilie Chakre
